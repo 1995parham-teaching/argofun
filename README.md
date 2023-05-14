@@ -19,17 +19,17 @@ dependencies:
     repository: "https://1995parham.me/saf" # it must be a valid chart repository
 ```
 
-and then our values:
+And then our values:
 
-#+begin_src yaml
+````yaml
 saf-consumer: # dependent chart name
   hello: 123
-#+end_src
+```
 
-finally we create an application for this chart on the argocd and it easily syncs our values with the cloud.
-in argocd we have projects and under them we have applications. projects are created with the help of cloud team.
+Finally we create an application for this chart on the ArgoCD and it easily syncs our values with the cloud.
+In ArgoCD we have projects and under them we have applications.
 
-#+begin_src yaml
+```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -47,11 +47,11 @@ spec:
     path: saf-consumer
     repoURL: git@github.com:1995parham/saf-values
     targetRevision: HEAD
-#+end_src
+```
 
-also we can create an application set to deploy multiple application at the same time even with discovery.
+Also we can create an application set to deploy multiple application at the same time even with discovery.
 
-#+begin_src yaml
+```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -78,11 +78,11 @@ spec:
         path: '{{ name }}'
         repoURL: git@github.com:1995parham/saf-values
         targetRevision: HEAD
-#+end_src
+```
 
 and here the /values.json/:
 
-#+begin_src json
+```json
 [
   {
     "name": "nats",
@@ -109,4 +109,4 @@ and here the /values.json/:
     }
   }
 ]
-#+end_src
+```
