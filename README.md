@@ -21,7 +21,7 @@ dependencies:
 
 And then our values:
 
-````yaml
+```yaml
 saf-consumer: # dependent chart name
   hello: 123
 ```
