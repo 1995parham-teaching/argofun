@@ -1,4 +1,10 @@
-# Fun with [Argocd](https://argoproj.github.io/)
+<h1>Fun with <a href="https://argoproj.github.io/">ArgoCD</a></h1>
+
+## Introduction
+
+There are different ways to use ArgoCD in your pipeline. The following introduction
+to one of these ways. The following way puts Helm chart besides the project and puts
+its values into a different repository.
 
 ## Projects Pipelines
 
