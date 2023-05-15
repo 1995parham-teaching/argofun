@@ -1,4 +1,6 @@
-<h1>Fun with <a href="https://argoproj.github.io/">ArgoCD</a></h1>
+<p align="center">
+  <h1>Fun with <a href="https://argoproj.github.io/">ArgoCD</a></h1>
+</p>
 
 ## Introduction
 
