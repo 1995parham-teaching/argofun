@@ -1,5 +1,9 @@
 <h1 align="center">Fun with <a href="https://argoproj.github.io/">ArgoCD</a></h1>
 
+<p align="center">
+  <img alt="banner" src="./.github/img/banner.png" height="200px" />
+</p>
+
 ## Introduction
 
 There are different ways to use ArgoCD in your pipeline. The following introduction
