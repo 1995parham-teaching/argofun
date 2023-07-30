@@ -8,9 +8,12 @@ its values into a different repository.
 
 ## Projects Pipelines
 
-Each helm project has two parts, one for the values and one for its chart.
-We can develop chart in the project repository (which seems a reasonable choice).
-Then create another repository for values in which we have dependency to main chart.
+Each project that has helm, has two parts, one is the values and the other one is its chart.
+We can develop chart in the project repository, which seems a reasonable choice, because then
+you make sure chart is always updated with the changes in the code base.
+Then create another repository for values
+(let's call it the values' repository)
+in which we have dependency to main chart.
 
 ```yaml
 apiVersion: v2
@@ -25,7 +28,7 @@ dependencies:
     repository: "https://1995parham.me/saf" # it must be a valid chart repository
 ```
 
-And then our values:
+And then our values placed in the values' repository:
 
 ```yaml
 saf-consumer: # dependent chart name
@@ -55,7 +58,7 @@ spec:
     targetRevision: HEAD
 ```
 
-Also we can create an application set to deploy multiple application at the same time even with discovery.
+Also we can create an application set to deploy multiple application at the same time **even with discovery**.
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -68,25 +71,26 @@ spec:
         repoURL: git@github.com:1995parham/saf-values
         revision: HEAD
         files:
-          - path: 'values.json'
+          - path: "values.json"
   template:
     metadata:
-      name: '{{ name }}'
+      name: "{{ name }}"
     spec:
       destination:
-        namespace: '{{ namespace.name }}'
+        namespace: "{{ namespace.name }}"
         server: https://kubernetes.default.svc
       project: nats
       source:
         helm:
           valueFiles:
-            - './{{ namespace.type }}-{{ region }}-okd4.yaml'
-        path: '{{ name }}'
+            - "./{{ namespace.type }}-{{ region }}-okd4.yaml"
+        path: "{{ name }}"
         repoURL: git@github.com:1995parham/saf-values
         targetRevision: HEAD
 ```
 
-and here the /values.json/:
+and here the `values.json` which provide information about our ArgoCD applications that exists in our
+values' repository:
 
 ```json
 [
