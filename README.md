@@ -6,18 +6,26 @@
 
 ## Introduction
 
-There are different ways to use ArgoCD in your pipeline. The following introduction
-to one of these ways. The following way puts Helm chart besides the project and puts
+There are different ways to use ArgoCD in your pipeline. The following is an introduction
+to one of these ways. The following way puts Helm's chart besides the project and puts
 its values into a different repository.
+
+## Why?
+
+It is better to develop charts beside the main project, so you can make sure it is updated
+with the latest changes on the main project.
+
+Having values on git helps you to track changes over the configuration (it is way better than
+using Gitlab/Github secrets because you they don't keep any history.)
 
 ## Projects Pipelines
 
-Each project that has helm, has two parts, one is the values and the other one is its chart.
+Each project that has Helm's chart, has two parts, one is the values and the other one is its chart itself.
 We can develop chart in the project repository, which seems a reasonable choice, because then
-you make sure chart is always updated with the changes in the code base.
+you make sure chart is always updated with the changes in the code base (as I said before).
 Then create another repository for values
 (let's call it the values' repository)
-in which we have dependency to main chart.
+in which we have dependency to the project's chart.
 
 ```yaml
 apiVersion: v2
@@ -28,8 +36,8 @@ version: "0.0.0" # please note that this version is required
 
 dependencies:
   - name: saf-consumer
-    version: "1.2.0" # chart version not the application version
-    repository: "https://1995parham.me/saf" # it must be a valid chart repository
+    version: "1.2.0" # chart version not the application version (but it is a good idea to always sync them)
+    repository: "https://1995parham.me/saf" # it must be a valid chart repository (it could be an oci registry too)
 ```
 
 And then our values placed in the values' repository:
@@ -70,7 +78,7 @@ kind: ApplicationSet
 metadata:
   name: bootstrap-testing
 spec:
-  generators:
+  generators: # generate applications from `values.json` in github.com/1995parham/saf-values
     - git:
         repoURL: git@github.com:1995parham/saf-values
         revision: HEAD
