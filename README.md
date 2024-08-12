@@ -135,3 +135,68 @@ values' repository:
   }
 ]
 ```
+
+## Upgrade your images
+
+When you deployed your application using ArgoCD, you can use [`argocd-image-updater`](https://argocd-image-updater.readthedocs.io/en/stable/)
+to change your images automatically when a new tag pushed into your registry. Also, you can ask it to commit it for you
+too.
+
+Unlike ArgoCD itself, there is no need to deploy it cluster-wise, you can deploy it just for your target team with the
+following helm chart:
+
+`Chart.yaml`:
+
+```yaml
+apiVersion: v2
+name: snapppay-argocd-image-updater
+type: application
+version: 0.0.0
+sources:
+  - https://artifacthub.io/packages/helm/argo/argocd-image-updater
+dependencies:
+  - name: argocd-image-updater
+    version: 0.11.0
+    repository: https://argoproj.github.io/argo-helm
+```
+
+`values.yaml`:
+
+```yaml
+argocd-image-updater:
+  resources:
+    limits:
+      cpu: 100m
+      memory: 512Mi
+    requests:
+      cpu: 10m
+      memory: 128Mi
+  extraArgs:
+  - --interval=1m
+  config:
+    applicationsAPIKind: argocd
+    argocd:
+      insecure: "true"
+      grpcWeb: "false"
+      insecure: "true"
+      plaintext: "true"
+      serverAddress: spcld-argocd-user-server.user-argocd
+      token: <TOKEN>
+    logLevel: debug
+    registries:
+    - name: Internal OKD Registry
+      api_url: https://image-registry.openshift-image-registry.svc:5000
+      prefix: image-registry.openshift-image-registry.svc:5000
+      ping: false
+      insecure: true
+      credentials: secret:user-argocd/cluster-registry-view#cred
+
+```
+
+you only need to have a static account in ArgoCD and generate a token for them:
+
+```bash
+argocd login --username admin-ci --password admin --grpc-web argocd.okd4.teh-1.snappcloud.io --grpc-web-root-path /grpc-api
+
+argocd account generate-token
+```
