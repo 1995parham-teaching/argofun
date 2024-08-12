@@ -142,7 +142,7 @@ When you deployed your application using ArgoCD, you can use [`argocd-image-upda
 to change your images automatically when a new tag pushed into your registry. Also, you can ask it to commit it for you
 too.
 
-Unlike ArgoCD itself, there is no need to deploy it cluster-wise, you can deploy it just for your target team with the
+Unlike ArgoCD itself, there is no need to deploy it cluster-wise, you can deploy it just for your target team with
 [its helm chart](https://github.com/argoproj/argo-helm/tree/main/charts/argocd-image-updater):
 
 `Chart.yaml`:
