@@ -6,26 +6,27 @@
 
 ## Introduction
 
-There are different ways to use ArgoCD in your pipeline. The following is an introduction
-to one of these ways. The following way puts Helm's chart besides the project and puts
-its values into a different repository.
+ArgoCD offers various integration options in your pipeline. This introduction will focus on one such approach,
+which involves storing Helm charts alongside your project and managing values in a separate repository.
 
-## Why?
+## Why? 🤔
 
-It is better to develop charts beside the main project, so you can make sure it is updated
-with the latest changes on the main project.
+It's recommended to develop charts alongside your main project,
+ensuring that they remain up-to-date with the latest changes and updates.
 
-Having values on git helps you to track changes over the configuration (it is way better than
-using Gitlab/Github secrets because you they don't keep any history.)
+Storing values in a Git repository allows you to track changes to your configuration over time,
+providing a more transparent and auditable approach compared to using GitLab/GitHub secrets,
+which do not retain version history.
 
-## Projects Pipelines
+## From Git to Production 🚀
 
-Each project that has Helm's chart, has two parts, one is the values and the other one is its chart itself.
-We can develop chart in the project repository, which seems a reasonable choice, because then
-you make sure chart is always updated with the changes in the code base (as I said before).
-Then create another repository for values
-(let's call it the values' repository)
-in which we have dependency to the project's chart.
+Each Helm chart-based project consists of two distinct components: the chart itself and its associated values.
+A reasonable approach is to develop the chart within the project's repository, ensuring that the chart remains
+up-to-date with changes to the codebase. This is because the chart is closely tied to the project's code and
+should reflect any changes made to it.
+
+Next, create a separate repository, which we'll refer to as the 'values repository',
+that depends on the project's chart. This repository will contain the values that are used to configure the chart.
 
 ```yaml
 apiVersion: v2
@@ -47,8 +48,10 @@ saf-consumer: # dependent chart name
   hello: 123
 ```
 
-Finally we create an application for this chart on the ArgoCD and it easily syncs our values with the cloud.
-In ArgoCD we have projects and under them we have applications.
+Once the chart and values repository are set up, you can create an application in ArgoCD that utilizes this chart.
+ArgoCD allows you to manage applications and their dependencies in a centralized manner.
+Within ArgoCD, you can create projects, which serve as a container for related applications.
+Under each project, you can define multiple applications, each with its own configuration and dependencies.
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -70,7 +73,7 @@ spec:
     targetRevision: HEAD
 ```
 
-Also we can create an application set to deploy multiple application at the same time **even with discovery**.
+Also, we can create an application set to deploy multiple application at the same time **even with discovery**.
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -101,7 +104,7 @@ spec:
         targetRevision: HEAD
 ```
 
-and here the `values.json` which provide information about our ArgoCD applications that exists in our
+And here the `values.json` which provide information about our ArgoCD applications that exists in our
 values' repository:
 
 ```json
